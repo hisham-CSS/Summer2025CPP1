@@ -1144,10 +1144,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite_Mario_47
+      name: 01_MarioFire
       rect:
         serializedVersion: 2
-        x: 61
+        x: 60
         y: 15
         width: 16
         height: 26
@@ -1166,7 +1166,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite_Mario_48
+      name: 02_MarioFire
       rect:
         serializedVersion: 2
         x: 79
@@ -1188,7 +1188,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite_Mario_49
+      name: 03_MarioFire
       rect:
         serializedVersion: 2
         x: 97
@@ -1465,10 +1465,13 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      01_MarioFire: -1608919650
       01_MarioIdle: 567789088
       01_MarioJump: -395688067
       01_MarioWalk: -1349248295
+      02_MarioFire: -752410225
       02_MarioWalk: 472279895
+      03_MarioFire: 665602492
       Sprite_Mario_10: -27821683
       Sprite_Mario_11: 199061283
       Sprite_Mario_12: 229235807
@@ -1508,9 +1511,6 @@ TextureImporter:
       Sprite_Mario_44: 469972221
       Sprite_Mario_45: 1748397609
       Sprite_Mario_46: 2092754674
-      Sprite_Mario_47: -1608919650
-      Sprite_Mario_48: -752410225
-      Sprite_Mario_49: 665602492
       Sprite_Mario_5: -301999431
       Sprite_Mario_50: 2136175386
       Sprite_Mario_51: -385169906
