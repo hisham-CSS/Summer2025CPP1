@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer), typeof(Collider2D))]
 [RequireComponent(typeof(Animator))]
@@ -6,6 +7,71 @@ public class PlayerController : MonoBehaviour
 {
     // this transform is used to check if the player is grounded only needed if the ground check position is generated and a seperate object
     //private Transform groundCheckPos;
+
+    private int _score = 0;
+    private int _lives = 3;
+    private int jumpForce = 6;
+
+    private Coroutine jumpForceChange = null;
+
+    public void ActivateJumpForceChange()
+    {
+        //start a coroutine that changes the jump force for x seconds
+        if (jumpForceChange != null)
+        {
+            StopCoroutine(jumpForceChange);
+            jumpForceChange = null;
+            jumpForce = 6; // Reset to default jump force
+        }
+
+        jumpForceChange = StartCoroutine(ChangeJumpForce()); // Change jump force to 12 for 3 seconds
+    }
+
+    private IEnumerator ChangeJumpForce()
+    {
+        jumpForce = 12; // Set new jump force
+        Debug.Log($"Jump force change to {jumpForce} at {Time.time}");
+        yield return new WaitForSeconds(5f); // Wait for 5 seconds
+        jumpForce = 6; // Reset to default jump force
+        Debug.Log($"Jump force change to {jumpForce} at {Time.time}");
+        jumpForceChange = null; // Clear the coroutine reference
+    }
+
+    public int score
+    {
+        get => _score;
+        set
+        {
+            if (value < 0)
+                _score = 0;
+            else
+                _score = value;
+        }
+    }
+
+    public int lives
+    {
+        get => _lives;
+        set
+        {
+            if (value < 0)
+            {
+                //gameover goes here
+                Debug.Log("Game Over! You have no lives left.");
+                _lives = 0;
+            }
+            else if (value > maxLives)
+            {
+                _lives = maxLives;
+            }
+            else
+            {
+                _lives = value;
+            }
+        }
+    }
+
+    public int maxLives = 9;
 
 
     //[SerializeField] private bool isGrounded = false;
@@ -53,6 +119,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         float hValue = Input.GetAxisRaw("Horizontal");
+        float vValue = Input.GetAxisRaw("Vertical");
         AnimatorStateInfo currentState = anim.GetCurrentAnimatorStateInfo(0);
         SpriteFlip(hValue);
         //Debug.Log("Ground Check Position: " + groundCheckPos);
@@ -64,15 +131,19 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetTrigger("Fire");
         }
-        if (currentState.IsName("Fire"))
+        else if (currentState.IsName("Fire"))
         {
             rb.linearVelocity = Vector2.zero;
+        }
+        else if (currentState.IsName("Jump") && (Input.GetButton("Fire2") && vValue > 0))
+        {
+            anim.SetTrigger("JumpAtk");
         }
 
         if (Input.GetButtonDown("Jump") && jumpCount < maxJumpCount)
         {
             rb.linearVelocityY = 0;
-            rb.AddForce(Vector2.up * 5, ForceMode2D.Impulse); // Adjust jump force as necessary
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Adjust jump force as necessary
             jumpCount++;
             //Debug.Log("Jump Count: " + jumpCount);
         }
@@ -102,7 +173,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"Collision with {collision.gameObject.name} detected. Grounded: {groundCheck.IsGrounded}");
+
     }
 
     private void OnCollisionExit2D(Collision2D collision)
